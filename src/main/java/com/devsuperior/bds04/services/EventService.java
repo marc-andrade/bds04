@@ -1,8 +1,9 @@
 package com.devsuperior.bds04.services;
 
-import com.devsuperior.bds04.dto.CityDTO;
-import com.devsuperior.bds04.entities.City;
+import com.devsuperior.bds04.dto.EventDTO;
+import com.devsuperior.bds04.entities.Event;
 import com.devsuperior.bds04.repositories.CityRepository;
+import com.devsuperior.bds04.repositories.EventRepository;
 import com.devsuperior.bds04.services.exceptions.DatabaseException;
 import com.devsuperior.bds04.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,44 +17,50 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityNotFoundException;
 
 @Service
-public class CityService {
+public class EventService {
 
     @Autowired
-    private CityRepository repository;
+    private EventRepository repository;
+
+    @Autowired
+    private CityRepository cityRepository;
 
     @Transactional(readOnly = true)
-    public Page<CityDTO> findAllPaged(Pageable pageable) {
-        Page<City> list = repository.findAll(pageable);
-        return list.map(CityDTO::new);
+    public Page<EventDTO> findAllPaged(Pageable pageable) {
+        Page<Event> list = repository.findAll(pageable);
+        return list.map(EventDTO::new);
     }
 
     @Transactional(readOnly = true)
-    public CityDTO findById(Long id) {
-        return new CityDTO(repository.findById(id)
+    public EventDTO findById(Long id) {
+        return new EventDTO(repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Object not found.")));
     }
 
     @Transactional
-    public CityDTO insert(CityDTO dto) {
-        return new CityDTO(repository.save(fromDTO(dto)));
+    public EventDTO insert(EventDTO dto) {
+        return new EventDTO(repository.save(fromDTO(dto)));
     }
 
     @Transactional
-    public CityDTO update(Long id, CityDTO dto) {
+    public EventDTO update(Long id, EventDTO dto) {
         try {
-            City city = repository.getOne(id);
-            city.setName(dto.getName());
-            return new CityDTO(repository.save(city));
+            Event event = repository.getOne(id);
+            fromDTO(dto);
+            return new EventDTO(repository.save(event));
         } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException("Id not found" + id);
         }
 
     }
 
-    public City fromDTO(CityDTO dto) {
-        City city = new City();
-        city.setName(dto.getName());
-        return city;
+    public Event fromDTO(EventDTO dto) {
+        Event event = new Event();
+        event.setName(dto.getName());
+        event.setDate(dto.getDate());
+        event.setUrl(dto.getUrl());
+        event.setCity(cityRepository.getOne(dto.getCityId()));
+        return event;
     }
 
     public void delete(Long id) {

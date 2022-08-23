@@ -1,9 +1,9 @@
-package com.devsuperior.dscatalog.resources;
+package com.devsuperior.bds04.controllers;
 
-import com.devsuperior.dscatalog.dto.UserDTO;
-import com.devsuperior.dscatalog.dto.UserInsertDTO;
-import com.devsuperior.dscatalog.dto.UserUpdateDTO;
-import com.devsuperior.dscatalog.services.UserService;
+import com.devsuperior.bds04.dto.UserDTO;
+import com.devsuperior.bds04.dto.UserInsertDTO;
+import com.devsuperior.bds04.dto.UserUpdateDTO;
+import com.devsuperior.bds04.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

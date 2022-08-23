@@ -1,6 +1,6 @@
-package com.devsuperior.dscatalog.dto;
+package com.devsuperior.bds04.dto;
 
-import com.devsuperior.dscatalog.entities.User;
+import com.devsuperior.bds04.entities.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -33,8 +33,6 @@ public class UserDTO {
 
     public UserDTO(User entity) {
         id = entity.getId();
-        firstName = entity.getFirstName();
-        lastName = entity.getLastName();
         email = entity.getEmail();
 
         entity.getRoles().forEach(role -> this.roles.add(new RoleDTO(role)));

@@ -1,4 +1,4 @@
-package com.devsuperior.dscatalog.entities;
+package com.devsuperior.bds04.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

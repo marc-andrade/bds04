@@ -1,4 +1,4 @@
-package com.devsuperior.dscatalog.resources.exceptions;
+package com.devsuperior.bds04.controllers.exceptions;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

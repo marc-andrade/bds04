@@ -1,7 +1,7 @@
-package com.devsuperior.dscatalog.resources.exceptions;
+package com.devsuperior.bds04.controllers.exceptions;
 
-import com.devsuperior.dscatalog.services.exceptions.DatabaseException;
-import com.devsuperior.dscatalog.services.exceptions.ResourceNotFoundException;
+import com.devsuperior.bds04.services.exceptions.DatabaseException;
+import com.devsuperior.bds04.services.exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -46,7 +46,7 @@ public class ResourceExceptionHandler {
         err.setTimestamp(Instant.now());
         err.setStatus(status.value());
         err.setError("Validation exception");
-        err.setMessage(e.getMessage());
+        err.setMessage("Campo requerido");
         err.setPath(request.getRequestURI());
 
         for(FieldError f : e.getBindingResult().getFieldErrors()){

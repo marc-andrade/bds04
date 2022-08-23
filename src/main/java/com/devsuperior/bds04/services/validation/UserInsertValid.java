@@ -1,4 +1,4 @@
-package com.devsuperior.dscatalog.services.validation;
+package com.devsuperior.bds04.services.validation;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

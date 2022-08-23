@@ -1,64 +1,69 @@
-package com.devsuperior.dscatalog.services;
+package com.devsuperior.bds04.services;
 
-import com.devsuperior.dscatalog.dto.CategoryDTO;
-import com.devsuperior.dscatalog.entities.Category;
-import com.devsuperior.dscatalog.repositories.CategoryRepository;
-import com.devsuperior.dscatalog.services.exceptions.DatabaseException;
-import com.devsuperior.dscatalog.services.exceptions.ResourceNotFoundException;
+import com.devsuperior.bds04.dto.CityDTO;
+import com.devsuperior.bds04.entities.City;
+import com.devsuperior.bds04.repositories.CityRepository;
+import com.devsuperior.bds04.services.exceptions.DatabaseException;
+import com.devsuperior.bds04.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
-public class CategoryService {
+public class CityService {
 
     @Autowired
-    private CategoryRepository repository;
+    private CityRepository repository;
 
     @Transactional(readOnly = true)
-    public Page<CategoryDTO> findAllPaged(Pageable pageable) {
-        Page<Category> list = repository.findAll(pageable);
-        return list.map(CategoryDTO::new);
+    public List<CityDTO> findAll() {
+        List<City> list = repository.findAll(Sort.by("name"));
+        return list.stream().map(CityDTO::new).collect(Collectors.toList());
     }
+
     @Transactional(readOnly = true)
-    public CategoryDTO findById(Long id) {
-        return new CategoryDTO(repository.findById(id)
-                .orElseThrow(()-> new ResourceNotFoundException("Object not found.")));
+    public CityDTO findById(Long id) {
+        return new CityDTO(repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Object not found.")));
     }
+
     @Transactional
-    public CategoryDTO insert(CategoryDTO categoryDTO) {
-        return new CategoryDTO(repository.save(fromDTO(categoryDTO)));
+    public CityDTO insert(CityDTO dto) {
+        return new CityDTO(repository.save(fromDTO(dto)));
     }
+
     @Transactional
-    public CategoryDTO update(Long id, CategoryDTO dto) {
+    public CityDTO update(Long id, CityDTO dto) {
         try {
-            Category category = repository.getReferenceById(id);
-            category.setName(dto.getName());
-            return new CategoryDTO(repository.save(category));
-        }catch (EntityNotFoundException e){
+            City city = repository.getOne(id);
+            city.setName(dto.getName());
+            return new CityDTO(repository.save(city));
+        } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException("Id not found" + id);
         }
 
     }
-    public Category fromDTO(CategoryDTO dto){
-        Category category = new Category();
-        category.setName(dto.getName());
-        return category;
+
+    public City fromDTO(CityDTO dto) {
+        City city = new City();
+        city.setName(dto.getName());
+        return city;
     }
 
     public void delete(Long id) {
         try {
             repository.deleteById(id);
-        }catch (EmptyResultDataAccessException e){
+        } catch (EmptyResultDataAccessException e) {
             throw new ResourceNotFoundException("Id not found" + id);
 
-        }catch (DataIntegrityViolationException e){
+        } catch (DataIntegrityViolationException e) {
             throw new DatabaseException("Integrity violation");
         }
     }

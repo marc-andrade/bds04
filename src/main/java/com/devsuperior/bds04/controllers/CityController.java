@@ -1,51 +1,48 @@
-package com.devsuperior.dscatalog.resources;
+package com.devsuperior.bds04.controllers;
 
-import com.devsuperior.dscatalog.dto.CategoryDTO;
-import com.devsuperior.dscatalog.services.CategoryService;
+import com.devsuperior.bds04.dto.CityDTO;
+import com.devsuperior.bds04.services.CityService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
+import java.util.List;
 
 @RestController
-@RequestMapping("/categories")
-public class CategoryResource {
+@RequestMapping("/cities")
+public class CityController {
     @Autowired
-    private CategoryService categoryService;
+    private CityService service;
 
     @GetMapping
-    public ResponseEntity<Page<CategoryDTO>> findAll(Pageable pageable) {
-
-        return ResponseEntity.ok().body(categoryService.findAllPaged(pageable));
+    public ResponseEntity<List<CityDTO>> findAll() {
+        return ResponseEntity.ok().body(service.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CategoryDTO> findById(@PathVariable Long id) {
-        return ResponseEntity.ok().body(categoryService.findById(id));
+    public ResponseEntity<CityDTO> findById(@PathVariable Long id) {
+        return ResponseEntity.ok().body(service.findById(id));
     }
 
     @PostMapping
-    public ResponseEntity<CategoryDTO> insert(@RequestBody CategoryDTO categoryDTO) {
-        categoryDTO = categoryService.insert(categoryDTO);
+    public ResponseEntity<CityDTO> insert(@Valid @RequestBody CityDTO dto) {
+        dto = service.insert(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(categoryDTO.getId()).toUri();
-        return ResponseEntity.created(uri).body(categoryDTO);
+                .buildAndExpand(dto.getId()).toUri();
+        return ResponseEntity.created(uri).body(dto);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CategoryDTO> update(@PathVariable Long id, @RequestBody CategoryDTO dto) {
-        return ResponseEntity.ok().body(categoryService.update(id, dto));
+    public ResponseEntity<CityDTO> update(@PathVariable Long id,@Valid @RequestBody CityDTO dto) {
+        return ResponseEntity.ok().body(service.update(id, dto));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<CategoryDTO> delete(@PathVariable Long id) {
-        categoryService.delete(id);
+    public ResponseEntity<CityDTO> delete(@PathVariable Long id) {
+        service.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

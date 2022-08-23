@@ -1,15 +1,15 @@
-package com.devsuperior.dscatalog.services;
+package com.devsuperior.bds04.services;
 
-import com.devsuperior.dscatalog.dto.RoleDTO;
-import com.devsuperior.dscatalog.dto.UserDTO;
-import com.devsuperior.dscatalog.dto.UserInsertDTO;
-import com.devsuperior.dscatalog.dto.UserUpdateDTO;
-import com.devsuperior.dscatalog.entities.Role;
-import com.devsuperior.dscatalog.entities.User;
-import com.devsuperior.dscatalog.repositories.RoleRepository;
-import com.devsuperior.dscatalog.repositories.UserRepository;
-import com.devsuperior.dscatalog.services.exceptions.DatabaseException;
-import com.devsuperior.dscatalog.services.exceptions.ResourceNotFoundException;
+import com.devsuperior.bds04.dto.RoleDTO;
+import com.devsuperior.bds04.dto.UserDTO;
+import com.devsuperior.bds04.dto.UserInsertDTO;
+import com.devsuperior.bds04.dto.UserUpdateDTO;
+import com.devsuperior.bds04.entities.Role;
+import com.devsuperior.bds04.entities.User;
+import com.devsuperior.bds04.repositories.RoleRepository;
+import com.devsuperior.bds04.repositories.UserRepository;
+import com.devsuperior.bds04.services.exceptions.DatabaseException;
+import com.devsuperior.bds04.services.exceptions.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +58,7 @@ public class UserService implements UserDetailsService {
     @Transactional
     public UserDTO update(Long id, UserUpdateDTO dto) {
         try {
-            User user = repository.getReferenceById(id);
+            User user = repository.getOne(id);
             copyDtoToEntity(dto, user);
             return new UserDTO(repository.save(user));
         }catch (EntityNotFoundException e){
@@ -79,13 +79,11 @@ public class UserService implements UserDetailsService {
 
     private void copyDtoToEntity(UserDTO dto, User entity) {
 
-        entity.setFirstName(dto.getFirstName());
-        entity.setLastName(dto.getLastName());
         entity.setEmail(dto.getEmail());
 
         entity.getRoles().clear();
         for(RoleDTO roleDto : dto.getRoles()){
-            Role role = roleRepository.getReferenceById(roleDto.getId());
+            Role role = roleRepository.getOne(roleDto.getId());
             entity.getRoles().add(role);
         }
     }
